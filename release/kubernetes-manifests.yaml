@@ -44,10 +44,10 @@ spec:
           allowPrivilegeEscalation: false
           capabilities:
             drop:
-              - all
+              - ALL
           privileged: false
           readOnlyRootFilesystem: true
-        image: priyaa221/emailamd:new
+        image: priyaa221/email_arm_amd:latest
         ports:
         - containerPort: 8080
         env:
@@ -57,20 +57,12 @@ spec:
           value: "1"
         readinessProbe:
           periodSeconds: 5
-          exec:
-            command: ["/bin/grpc_health_probe", "-addr=:8080"]
+          grpc:
+            port: 8080
         livenessProbe:
           periodSeconds: 5
-          exec:
-            command: ["/bin/grpc_health_probe", "-addr=:8080"]
-        resources:
-          requests:
-            cpu: 100m
-            memory: 64Mi
-          limits:
-            cpu: 200m
-            memory: 128Mi
-
+          grpc:
+            port: 8080
 ---
 apiVersion: v1
 kind: Service
@@ -110,18 +102,18 @@ spec:
             allowPrivilegeEscalation: false
             capabilities:
               drop:
-                - all
+                - ALL
             privileged: false
             readOnlyRootFilesystem: true
-          image: priyaa221/checkoutamd:new
+          image: priyaa221/checkout_arm_amd:latest
           ports:
           - containerPort: 5050
           readinessProbe:
-            exec:
-              command: ["/bin/grpc_health_probe", "-addr=:5050"]
+            grpc:
+              port: 5050
           livenessProbe:
-            exec:
-              command: ["/bin/grpc_health_probe", "-addr=:5050"]
+            grpc:
+              port: 5050
           env:
           - name: PORT
             value: "5050"
@@ -137,14 +129,6 @@ spec:
             value: "currencyservice:7000"
           - name: CART_SERVICE_ADDR
             value: "cartservice:7070"
-          resources:
-            requests:
-              cpu: 100m
-              memory: 64Mi
-            limits:
-              cpu: 200m
-              memory: 128Mi
-
 ---
 apiVersion: v1
 kind: Service
@@ -185,20 +169,20 @@ spec:
           allowPrivilegeEscalation: false
           capabilities:
             drop:
-              - all
+              - ALL
           privileged: false
           readOnlyRootFilesystem: true
-        image: priyaa221/recommendationamd:new
+        image: priyaa221/recommendation_arm_amd:latest
         ports:
         - containerPort: 8080
         readinessProbe:
           periodSeconds: 5
-          exec:
-            command: ["/bin/grpc_health_probe", "-addr=:8080"]
+          grpc:
+            port: 8080
         livenessProbe:
           periodSeconds: 5
-          exec:
-            command: ["/bin/grpc_health_probe", "-addr=:8080"]
+          grpc:
+            port: 8080
         env:
         - name: PORT
           value: "8080"
@@ -206,14 +190,6 @@ spec:
           value: "productcatalogservice:3550"
         - name: DISABLE_PROFILER
           value: "1"
-        resources:
-          requests:
-            cpu: 100m
-            memory: 220Mi
-          limits:
-            cpu: 200m
-            memory: 450Mi
-
 ---
 apiVersion: v1
 kind: Service
@@ -255,10 +231,10 @@ spec:
             allowPrivilegeEscalation: false
             capabilities:
               drop:
-                - all
+                - ALL
             privileged: false
             readOnlyRootFilesystem: true
-          image: priyaa221/frontamd:new
+          image: priyaa221/frontend_arm_amd:latest
           ports:
           - containerPort: 8080
           readinessProbe:
@@ -302,14 +278,8 @@ spec:
             value: "0"
           # - name: CYMBAL_BRANDING
           #   value: "true"
-          resources:
-            requests:
-              cpu: 100m
-              memory: 64Mi
-            limits:
-              cpu: 200m
-              memory: 128Mi
-
+          # - name: FRONTEND_MESSAGE
+          #   value: "Replace this with a message you want to display on all pages."
 ---
 apiVersion: v1
 kind: Service
@@ -363,10 +333,10 @@ spec:
           allowPrivilegeEscalation: false
           capabilities:
             drop:
-              - all
+              - ALL
           privileged: false
           readOnlyRootFilesystem: true
-        image: priyaa221/paymentserviceamd:new
+        image: priyaa221/payment_arm_amd:latest
         ports:
         - containerPort: 50051
         env:
@@ -375,19 +345,11 @@ spec:
         - name: DISABLE_PROFILER
           value: "1"
         readinessProbe:
-          exec:
-            command: ["/bin/grpc_health_probe", "-addr=:50051"]
+          grpc:
+            port: 50051
         livenessProbe:
-          exec:
-            command: ["/bin/grpc_health_probe", "-addr=:50051"]
-        resources:
-          requests:
-            cpu: 100m
-            memory: 64Mi
-          limits:
-            cpu: 200m
-            memory: 128Mi
-
+          grpc:
+            port: 50051
 ---
 apiVersion: v1
 kind: Service
@@ -428,10 +390,10 @@ spec:
           allowPrivilegeEscalation: false
           capabilities:
             drop:
-              - all
+              - ALL
           privileged: false
           readOnlyRootFilesystem: true
-        image: priyaa221/productcatalamd:new
+        image: priyaa221/productcatalogs_arm_amd:latest
         ports:
         - containerPort: 3550
         env:
@@ -440,19 +402,11 @@ spec:
         - name: DISABLE_PROFILER
           value: "1"
         readinessProbe:
-          exec:
-            command: ["/bin/grpc_health_probe", "-addr=:3550"]
+          grpc:
+            port: 3550
         livenessProbe:
-          exec:
-            command: ["/bin/grpc_health_probe", "-addr=:3550"]
-        resources:
-          requests:
-            cpu: 100m
-            memory: 64Mi
-          limits:
-            cpu: 200m
-            memory: 128Mi
-
+          grpc:
+            port: 3550
 ---
 apiVersion: v1
 kind: Service
@@ -493,31 +447,24 @@ spec:
           allowPrivilegeEscalation: false
           capabilities:
             drop:
-              - all
+              - ALL
           privileged: false
           readOnlyRootFilesystem: true
-        image: priyaa221/cartamd:new
+        image: priyaa221/cartservice_arm:latest
         ports:
         - containerPort: 7070
         env:
         - name: REDIS_ADDR
           value: "redis-cart:6379"
-        resources:
-          requests:
-            cpu: 200m
-            memory: 64Mi
-          limits:
-            cpu: 300m
-            memory: 128Mi
         readinessProbe:
           initialDelaySeconds: 15
-          exec:
-            command: ["/bin/grpc_health_probe", "-addr=:7070", "-rpc-timeout=5s"]
+          grpc:
+            port: 7070
         livenessProbe:
           initialDelaySeconds: 15
           periodSeconds: 10
-          exec:
-            command: ["/bin/grpc_health_probe", "-addr=:7070", "-rpc-timeout=5s"]
+          grpc:
+            port: 7070
 ---
 apiVersion: v1
 kind: Service
@@ -572,7 +519,7 @@ spec:
           allowPrivilegeEscalation: false
           capabilities:
             drop:
-              - all
+              - ALL
           privileged: false
           readOnlyRootFilesystem: true
         image: busybox:latest
@@ -585,22 +532,15 @@ spec:
           allowPrivilegeEscalation: false
           capabilities:
             drop:
-              - all
+              - ALL
           privileged: false
           readOnlyRootFilesystem: true
-        image: priyaa221/loadgenerator:new
+        image: priyaa221/loadgenerator_arm_amd:latest
         env:
         - name: FRONTEND_ADDR
           value: "frontend:80"
         - name: USERS
           value: "10"
-        resources:
-          requests:
-            cpu: 300m
-            memory: 256Mi
-          limits:
-            cpu: 500m
-            memory: 512Mi
 
 ---
 apiVersion: apps/v1
@@ -629,10 +569,10 @@ spec:
           allowPrivilegeEscalation: false
           capabilities:
             drop:
-              - all
+              - ALL
           privileged: false
           readOnlyRootFilesystem: true
-        image: priyaa221/currency:new
+        image: priyaa221/currency_arm_amd:latest
         ports:
         - name: grpc
           containerPort: 7000
@@ -642,19 +582,11 @@ spec:
         - name: DISABLE_PROFILER
           value: "1"
         readinessProbe:
-          exec:
-            command: ["/bin/grpc_health_probe", "-addr=:7000"]
+          grpc:
+            port: 7000
         livenessProbe:
-          exec:
-            command: ["/bin/grpc_health_probe", "-addr=:7000"]
-        resources:
-          requests:
-            cpu: 100m
-            memory: 64Mi
-          limits:
-            cpu: 200m
-            memory: 128Mi
-
+          grpc:
+            port: 7000
 ---
 apiVersion: v1
 kind: Service
@@ -694,10 +626,10 @@ spec:
           allowPrivilegeEscalation: false
           capabilities:
             drop:
-              - all
+              - ALL
           privileged: false
           readOnlyRootFilesystem: true
-        image: priyaa221/shipping:new
+        image: priyaa221/shipping_arm_amd:latest
         ports:
         - containerPort: 50051
         env:
@@ -707,19 +639,11 @@ spec:
           value: "1"
         readinessProbe:
           periodSeconds: 5
-          exec:
-            command: ["/bin/grpc_health_probe", "-addr=:50051"]
+          grpc:
+            port: 50051
         livenessProbe:
-          exec:
-            command: ["/bin/grpc_health_probe", "-addr=:50051"]
-        resources:
-          requests:
-            cpu: 100m
-            memory: 64Mi
-          limits:
-            cpu: 200m
-            memory: 128Mi
-
+          grpc:
+            port: 50051
 ---
 apiVersion: v1
 kind: Service
@@ -758,7 +682,7 @@ spec:
           allowPrivilegeEscalation: false
           capabilities:
             drop:
-              - all
+              - ALL
           privileged: false
           readOnlyRootFilesystem: true
         image: redis:alpine
@@ -775,13 +699,6 @@ spec:
         volumeMounts:
         - mountPath: /data
           name: redis-data
-        resources:
-          limits:
-            memory: 256Mi
-            cpu: 125m
-          requests:
-            cpu: 70m
-            memory: 200Mi
       volumes:
       - name: redis-data
         emptyDir: {}
@@ -825,32 +742,25 @@ spec:
           allowPrivilegeEscalation: false
           capabilities:
             drop:
-              - all
+              - ALL
           privileged: false
           readOnlyRootFilesystem: true
-        image: priyaa221/adservice_arm:copy_tar
+        image: priyaa221/adservice_arm:latest
         ports:
         - containerPort: 9555
         env:
         - name: PORT
           value: "9555"
-        resources:
-          requests:
-            cpu: 200m
-            memory: 180Mi
-          limits:
-            cpu: 300m
-            memory: 300Mi
         readinessProbe:
           initialDelaySeconds: 20
           periodSeconds: 15
-          exec:
-            command: ["/bin/grpc_health_probe", "-addr=:9555"]
+          grpc:
+            port: 9555
         livenessProbe:
           initialDelaySeconds: 20
           periodSeconds: 15
-          exec:
-            command: ["/bin/grpc_health_probe", "-addr=:9555"]
+          grpc:
+            port: 9555
 ---
 apiVersion: v1
 kind: Service
